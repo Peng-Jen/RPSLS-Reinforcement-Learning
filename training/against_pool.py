@@ -4,7 +4,7 @@ import numpy as np
 from copy import deepcopy
 from tqdm import tqdm
 
-def train_agent_against_pool(opponent_classes, agent_class, rewards_table, agent_config, training_config, proportions=None):
+def train_agent_against_pool(opponent_classes, agent_class, rewards_table, mapping, agent_config, training_config, proportions=None):
     """
     Trains a QLearningAgent against a pool of opponents with optional proportions.
     """
@@ -20,8 +20,10 @@ def train_agent_against_pool(opponent_classes, agent_class, rewards_table, agent
 
     for _ in tqdm(range(training_config.episodes)):
         opponent_cls = random.choices(opponent_classes, weights=proportions)[0]
-        opponent = opponent_cls(agent_config)
-
+        try:
+            opponent = opponent_cls(agent_config)
+        except:
+            opponent = opponent_cls(agent_config, rewards_table, mapping)
         env = RPSLSEnv(rewards_table=rewards_table, target_score=training_config.target_score)
         env.reset()
         rounds = 0
@@ -29,13 +31,15 @@ def train_agent_against_pool(opponent_classes, agent_class, rewards_table, agent
         q_before = deepcopy(agent.Q)
 
         while not env.is_done() and rounds < training_config.max_rounds:
-            state = env.get_state()
-            a_agent = agent.select_action(state)
-            a_oppo = opponent.select_action(state)
+            a_state = env.get_state()
+            b_state = env.get_oppo_state()
+            a_agent = agent.select_action(a_state)
+            a_oppo = opponent.select_action(b_state)
             r_agent, r_oppo = env.step(a_agent, a_oppo)
 
-            agent.update(state, a_agent, r_agent, env.get_state())
-            opponent.update(state, a_oppo, r_oppo, env.get_state())
+            next_state, next_oppo_state = env.get_state(), env.get_oppo_state()
+            agent.update(a_state, a_agent, r_agent, next_state)
+            opponent.update(b_state, a_oppo, r_oppo, next_oppo_state)
 
 
             action_history.append(a_agent)

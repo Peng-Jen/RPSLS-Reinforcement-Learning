@@ -1,6 +1,6 @@
 ## Rock-Paper-Scissors-Lizard-Spock — Reinforcement Learning Arena
 
-_Version 0.1.0_
+_Version 0.2.0_
 
 A reinforcement learning playground for multi-agent training, strategy visualization, and interactive gameplay in the expanded RPSLS universe.
 
@@ -15,7 +15,7 @@ Here's how the game works
 - **Spock** smashes **Scissors** and vaporizes **Rock** 
 
 ## Features
-- **Trainable Agents and Heuristic Agents** — Supports Q-Learning, Softmax, OneType, Tit-for-Tat, Random agents, and more
+- **Trainable Agents and Heuristic Agents** — Supports Q-Learning, Softmax, Adaptive, Tit-for-Tat, and more
 - **Weighted & Custom Payoff Tables** — Experiment with biased payoff game
 - **Training Visualization** — Tracks Q-value convergence and policy evolution
 - **Interactive Streamlit App** — Let humans play against AI, or watch AI vs. AI battles live
@@ -55,7 +55,8 @@ streamlit run app.py
 | `RandomAgent`    | Heuristic | Picks actions uniformly at random   |
 | `OneTypeAgent`   | Heuristic | Always plays the same move          |
 | `CycleAgent`     | Heuristic | Cycles through available actions    |
-| `TitForTatAgent` | Heuristic | Mimics the opponent's previous move |
+| `TitForTatAgent` | Heuristic | Beats the opponent's previous move |
+| `AdaptiveAgent`  | Heuristic | Exploit startegy over Nash strategy | 
 | `QLearningAgent` | RL        | Learns via Q-learning               |
 | `SoftmaxAgent`   | RL        | Uses softmax sampling over Q-values |
 
@@ -86,7 +87,7 @@ Here are some win rate heatmaps. Since random selection is involved and explorat
 </div>
 
 ## Future Developments
-- **Improved State Representation**: Move history, opponent distributions, score gap
+- **Improved State Representation**: Move history, opponent distributions, score gap.
 - **Flexible Payoff Matrices**: Support asymmetric and dynamic payoff structures, including row-based and context-aware rewards.
 - **Advanced Agents**: Implement opponent modeling, policy gradients, and meta-learning strategies.
 - **UI Improvements**: Enable tooltips for payoff tables, live Q-table visualization, and agent uploads.

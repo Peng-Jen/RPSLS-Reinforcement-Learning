@@ -52,18 +52,19 @@ def plot_winrate_heatmap(env_class, agent_classes, rewards_table, training_confi
         agent_A = deepcopy(agent_classes[names[i]])
         agent_B = deepcopy(agent_classes[names[j]])
         winrate = []
+        wins_A = 0
         for _ in range(episodes):
             env.reset()
             played_game = 0
-            wins_A = 0
 
             while not env.is_done() and played_game < training_config.max_rounds:
-                state = env.get_state()
-                a_A = agent_A.select_action(state)
-                a_B = agent_B.select_action(state)
+                a_state = env.get_state()
+                b_state = env.get_oppo_state()
+                a_A = agent_A.select_action(a_state)
+                a_B = agent_B.select_action(b_state)
                 r_A, r_B = env.step(a_A, a_B)
-                agent_A.update(state, a_A, r_A, env.get_state())
-                agent_B.update(state, a_B, r_B, env.get_state())
+                agent_A.update(a_state, a_A, r_A, env.get_state())
+                agent_B.update(b_state, a_B, r_B, env.get_oppo_state())
                 played_game += 1
 
             if hasattr(agent_A, "decay_epsilon"):
@@ -75,11 +76,11 @@ def plot_winrate_heatmap(env_class, agent_classes, rewards_table, training_confi
             if hasattr(agent_B, "decay_temperature"):
                 agent_B.decay_temperature()
 
-            if env.self_score > env.oppo_score:
+            if env.self_score >= env.oppo_score:
                 wins_A += 1
 
             winrate.append(wins_A)
-        matrix[i][j] = np.mean(winrate)
+        matrix[i][j] = wins_A / episodes
 
 
     plt.figure(figsize=(8, 6))
@@ -117,12 +118,13 @@ def summarize_agents_battle(agent_A, agent_B, rewards_table, training_config, ac
         env.reset()
         played_game = 0
         while not env.is_done() and played_game < max_rounds:
-            state = env.get_state()
-            a_A = agent_A.select_action(state)
-            a_B = agent_B.select_action(state)
+            a_state = env.get_state()
+            b_state = env.get_oppo_state()
+            a_A = agent_A.select_action(a_state)
+            a_B = agent_B.select_action(b_state)
             r_A, r_B = env.step(a_A, a_B)
-            agent_A.update(state, a_A, r_A, env.get_state())
-            agent_B.update(state, a_B, r_B, env.get_state())
+            agent_A.update(a_state, a_A, r_A, env.get_state())
+            agent_B.update(b_state, a_B, r_B, env.get_oppo_state())
             action_count_A[a_A] += 1
             action_count_B[a_B] += 1
             played_game += 1

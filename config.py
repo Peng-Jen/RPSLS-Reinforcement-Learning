@@ -10,9 +10,7 @@ class AgentConfig:
     epsilon_min: float = 0.1          # lower bound for epsilon
     temperature: float = 2            # initial temperature
     temperature_decay: float = 0.995  # temperature decay rate
-    temperature_min: float = 0.5        # lower bound for temperature
-    shift: int = -1                   # CycleAgent
-    default_action: int = -1          # OneTypeAgent 
+    temperature_min: float = 0.5      # lower bound for temperature
 
 
 @dataclass

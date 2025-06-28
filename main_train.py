@@ -1,8 +1,7 @@
-#%%
 import argparse
 from env.rpsls_env import RPSLSEnv
-from rewards_tables import CLASSIC_RPSLS, WEIGHTED_RPSLS, ONLY_SPOCK
-from agents import RandomAgent, TitForTatAgent, CycleAgent, OneTypeAgent, BaseQLearningAgent, SoftmaxAgent
+from rewards_tables import CLASSIC_RPSLS, WEIGHTED_RPSLS, ONLY_SPOCK, mapping_dict
+from agents import RandomAgent, TitForTatAgent, CycleAgent, OneTypeAgent, BaseQLearningAgent, SoftmaxAgent, AdaptiveAgent
 from config import TrainingConfig, AgentConfig
 from tools import tools
 from training.against_pool import train_agent_against_pool
@@ -34,6 +33,7 @@ trained_q_agent, q_changes, actions_history = train_agent_against_pool(
     agent_config=AgentConfig(),
     training_config=TrainingConfig(),
     rewards_table=rewards,
+    mapping=mapping_dict,
     proportions=[0.33, 0.33, 0.33, 0.01]
 )
 
@@ -43,6 +43,7 @@ trained_softmax_agent, softmax_q_changes, softmax_actions_history = train_agent_
     agent_config=AgentConfig(),
     training_config=TrainingConfig(),
     rewards_table=rewards,
+    mapping=mapping_dict,
     proportions=[0.33, 0.33, 0.33, 0.01]
 )
 
@@ -56,9 +57,10 @@ agent_classes = {
     "Random": RandomAgent(AgentConfig()),
     "OneType": OneTypeAgent(AgentConfig()),
     "Cycle": CycleAgent(AgentConfig()),
-    "TitForTat": TitForTatAgent(AgentConfig()),
+    "TitForTat": TitForTatAgent(AgentConfig(), rewards, mapping_dict),
+    "Adaptive": AdaptiveAgent(AgentConfig(), rewards, mapping_dict),
     "QLearning": trained_q_agent,
-    "Softmax": trained_softmax_agent
+    "Softmax": trained_softmax_agent,
 }
 trained_q_agent.save_Q(name)
 trained_softmax_agent.save_Q(name)

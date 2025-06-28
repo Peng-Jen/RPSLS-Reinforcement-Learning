@@ -13,13 +13,28 @@ class RPSLSEnv:
         raw_state = {
             'self_last': self.self_last,
             'oppo_last': self.oppo_last,
-            'self_history': self.self_history,
-            'oppo_history': self.oppo_history,
+            'self_history': self.self_history.copy(),
+            'oppo_history': self.oppo_history.copy(),
             'oppo_distribution': self._get_distribution(self.oppo_history, window_size=20),
             'self_score': self.self_score,
             'oppo_score': self.oppo_score,
             'self_reward': self.self_reward,
             'oppo_reward': self.oppo_reward
+        }
+        
+        return raw_state
+    
+    def get_oppo_state(self):
+        raw_state = {
+            'self_last': self.oppo_last,
+            'oppo_last': self.self_last,
+            'self_history': self.oppo_history.copy(),
+            'oppo_history': self.self_history.copy(),
+            'oppo_distribution': self._get_distribution(self.self_history, window_size=20),
+            'self_score': self.oppo_score,
+            'oppo_score': self.self_score,
+            'self_reward': self.oppo_reward,
+            'oppo_reward': self.self_reward
         }
         
         return raw_state
