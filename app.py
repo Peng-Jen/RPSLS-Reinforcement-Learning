@@ -57,7 +57,7 @@ with pva:
             st.session_state.agent_config = AgentConfigForBattle()
         if not st.session_state.agent_config:
             st.session_state.agent_config = AgentConfigForBattle()
-        agent_initialization('agent', 'table', st.session_state.agent_config)
+        agent_initialization('agent', 'table', st.session_state.agent_config, st.session_state.table, mapping_dict)
 
         if not st.session_state.in_game:
             target_score = st.number_input("🎯 Input the target score", min_value=5, max_value=50, step=5)
@@ -175,8 +175,8 @@ with ava:
         agent1_config = st.session_state[f'ava_{agent1_str}_config']
         agent2_config = st.session_state[f'ava_{agent2_str}_config']
         
-        agent_initialization(agent1_str, 'ava_table', agent1_config)
-        agent_initialization(agent2_str, 'ava_table', agent2_config)
+        agent_initialization(agent1_str, 'ava_table', agent1_config, st.session_state.ava_table, mapping_dict)
+        agent_initialization(agent2_str, 'ava_table', agent2_config, st.session_state.ava_table, mapping_dict)
 
         # === setup environment ===
         st.session_state.ava_target_score = st.number_input("🎯 Input the target score", min_value=5, max_value=50, value=5, step=5)

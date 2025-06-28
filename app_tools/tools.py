@@ -1,5 +1,6 @@
 import streamlit as st
 from .const import *
+from rewards_tables import mapping_dict
 
 def agent_select(key):
     radio_key = f"{key}_radio"
@@ -55,7 +56,7 @@ def table_select(key):
             st.success(f'✅ Table is selected ({st.session_state[table_name_key]})')
 
 
-def agent_initialization(agent, table, agent_config):
+def agent_initialization(agent, table, agent_config, rewards_table, mapping_dict):
     import pickle
     name_key = f'{agent}_name'
     table_name_key = f'{table}_name'
@@ -71,7 +72,10 @@ def agent_initialization(agent, table, agent_config):
         else:
             st.session_state[agent] = agents_map[st.session_state[name_key]](agent_config, pretrained=st.session_state[Q_table_key])
     elif st.session_state[agent] is None:
+        try:
             st.session_state[agent] = agents_map[st.session_state[name_key]](agent_config)
+        except:
+            st.session_state[agent] = agents_map[st.session_state[name_key]](agent_config, rewards_table, mapping_dict)
 
 def game_reset():
     st.session_state.player_score = 0

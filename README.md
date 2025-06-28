@@ -1,6 +1,6 @@
 ## Rock-Paper-Scissors-Lizard-Spock — Reinforcement Learning Arena
 
-_Version 0.2.0_
+_Version 0.2.1_
 
 A reinforcement learning playground for multi-agent training, strategy visualization, and interactive gameplay in the expanded RPSLS universe.
 
